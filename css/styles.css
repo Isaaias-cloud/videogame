@@ -1,0 +1,74 @@
+#gameCanvas {
+    width: 1300px;  
+    height: 700px;
+    background-color: black;
+    display: block;
+}
+/* General */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Caja de instrucciones */
+/* Ajuste en la caja de instrucciones */
+.instructions {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste en la caja expandida */
+.instructions.open {
+    width: 200px;
+    height: auto;
+    padding: 10px;
+}
+
+
+
+
+.instructions button {
+    width: 100%;
+    height: 50px;
+    font-size: 1.5rem;
+}
+
+/* Ajuste en el contenido */
+.instructions-content {
+    display: none;
+    text-align: left;
+    color: white;
+    width: 100%;
+    padding-top: 10px;
+}
+
+/* Mostrar el contenido cuando la caja está abierta */
+.instructions.open .instructions-content {
+    display: block;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+/* Fondo del menú */
+.menu-screen {
+    background: url('../assets/background.png') no-repeat center center;
+    background-size: cover;
+    text-align: center;
+}
+
+/* Ocultar el juego hasta que se inicie */
+.d-none {
+    display: none !important;
+}
+

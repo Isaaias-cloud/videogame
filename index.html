@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superviviente Espacial</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS (necesario para modales) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+</head>
+
+
+<!-- MODAL DE AJUSTES -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="settingsModalLabel">Ajustes de Sonido</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="musicVolume" class="form-label">Volumen de Música</label>
+                    <input type="range" class="form-range" id="musicVolume" min="0" max="1" step="0.01">
+                </div>
+                <div class="mb-3">
+                    <label for="effectsVolume" class="form-label">Volumen de Efectos</label>
+                    <input type="range" class="form-range" id="effectsVolume" min="0" max="1" step="0.01">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body class="bg-dark text-light d-flex flex-column vh-100">
+    <audio id="gameMusic" src="assets/music.mp3" loop></audio>
+
+    <!-- HEADER -->
+    <header class="d-flex align-items-center justify-content-center p-3 bg-primary">
+        <img src="assets/asteroid.png" alt="Asteroide" class="me-3" style="height: 50px;">
+        <h1 class="mb-0 text-white">Batalla Cósmica</h1>
+    </header>
+
+
+    <!-- MENÚ INICIAL -->
+    <div id="menuScreen" class="menu-screen d-flex flex-column justify-content-center align-items-center vh-100 w-100"
+        style="background: url('assets/background.png') center/cover no-repeat; 
+            max-width: 1300px; 
+            max-height: 700px; 
+            width: min(100%, 1300px); 
+            height: min(100%, 700px); 
+            margin: auto;">
+            
+        <h1 class="mb-4 text-center">Superviviente Espacial</h1>
+        <div class="d-grid gap-3 w-75">
+            <button id="startGame" class="btn btn-success btn-lg btn-block">Iniciar</button>
+            <button id="settings" class="btn btn-warning btn-lg btn-block" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                Ajustes
+            </button><!-- Botón de Guía -->
+            <button id="guide" class="btn btn-info btn-lg btn-block" data-bs-toggle="modal" data-bs-target="#guideModal">Guía</button>
+
+            <!-- Modal de Guía -->
+            <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content bg-dark text-light">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="guideModalLabel">Guía de Enemigos</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Enemigo 1: Asteroide -->
+                            <div class="mb-4">
+                                <img src="assets/asteroide1.png" alt="Asteroide" class="img-fluid mb-2">
+                                <h5>Asteroide</h5>
+                                <p>Destrúyelo para ganar puntos.</p>
+                            </div>
+
+                            <!-- Enemigo 2: Disparador -->
+                            <div class="mb-4">
+                                <img src="assets/alien_shooter.png" alt="Enemigo Disparador" class="img-fluid mb-2">
+                                <h5>Disparador</h5>
+                                <p>Esquiva sus disparos, no puedes dañarlo.</p>
+                            </div>
+
+                            <!-- Enemigo 3: Embestidor -->
+                            <div class="mb-4">
+                                <img src="assets/alien_boost1.png" alt="Enemigo Embestidor" class="img-fluid mb-2">
+                                <h5>Embestidor</h5>
+                                <p>Te perseguirá hasta estrellarse contra ti. Destrúyelo antes de que impacte.</p>
+                            </div>
+
+                            <!-- Enemigo 4: Jefe -->
+                            <div class="mb-4">
+                                <img src="assets/alien_boss.png" alt="Jefe Final" class="img-fluid mb-2">
+                                <h5>Jefe</h5>
+                                <p>Son tres aliens que primero disparan y luego te persiguen. Mientras disparan, son invulnerables.  
+                                Espera a que te persigan para poder dañarlos.</p>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- MAIN (JUEGO) -->
+    <main id="gameScreen" class="flex-grow-1 d-flex justify-content-center align-items-center position-relative d-none">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Caja de instrucciones -->
+        <div id="instructionsBox" class="instructions open">
+            <button id="toggleInstructions" class="btn btn-outline-light">☰</button>
+            <div class="instructions-content">
+                <h3>Instrucciones</h3>
+                <p>- Muévete con las teclas W, A, S, D.</p>
+                <p>- Dispara haciendo clic sobre los enemigos.</p>
+                <p>- Destruye asteroides para ganar puntos.</p>
+                <p>- Evita los ataques enemigos; si te golpean, tu nave sufrirá daño.</p>
+                <p>- Sobrevive y logra regresar a la Tierra.</p>
+            </div>
+        </div>
+    </main>
+
+    
+
+    <!-- FOOTER -->
+    <footer class="text-center p-3 bg-secondary">
+        <p class="mb-0">© 2025 Creado por Isaaias Arrieta</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/menu.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/instructions.js"></script>
+    <script src="js/endgame.js"></script>
+    <script src="js/settings.js"></script>
+
+
+
+</body>
+</html>
