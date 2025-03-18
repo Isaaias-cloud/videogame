@@ -65,3 +65,9 @@ gameMusic.addEventListener("ended", () => {
         gameMusic.play().catch(error => console.log("Error al reiniciar música:", error));
     }
 });
+document.getElementById("startGame").addEventListener("click", function () {
+    document.getElementById("menuScreen").classList.add("d-none"); // Oculta el menú
+    document.getElementById("gameScreen").classList.remove("d-none"); // Muestra el juego
+
+    startGame(); // Llama a la función que inicia el juego
+});

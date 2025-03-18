@@ -1,9 +1,24 @@
-#gameCanvas {
-    width: 1300px;  
-    height: 700px;
-    background-color: black;
-    display: block;
+/* Ajuste para que el main (gameScreen) tenga el mismo tamaño y posición que el menú */
+#gameScreen {
+    position: relative;
+    background: url('assets/background.png') center/cover no-repeat;
+    max-width: 1300px;
+    max-height: 700px;
+    width: min(100%, 1300px);
+    height: min(100%, 700px);
+    margin: auto;
+    overflow: hidden;
 }
+
+/* Asegurar que el canvas cubra todo el área del juego */
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 /* General */
 body {
     font-family: Arial, sans-serif;
@@ -60,12 +75,7 @@ body {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
-/* Fondo del menú */
-.menu-screen {
-    background: url('../assets/background.png') no-repeat center center;
-    background-size: cover;
-    text-align: center;
-}
+
 
 /* Ocultar el juego hasta que se inicie */
 .d-none {

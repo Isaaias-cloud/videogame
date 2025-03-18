@@ -39,8 +39,8 @@ const frameRate = 10;
 const player = {
     x: canvas.width / 2 - 32,
     y: canvas.height / 2 - 32,
-    width: 250,
-    height: 250,
+    width: 185,
+    height: 130,
     image: new Image(),
     speedX: 0, // Velocidad en X
     speedY: 0, // Velocidad en Y
@@ -89,6 +89,8 @@ function updatePlayer() {
 }
 
 function updateAnimation() {
+    if (player.isGodMode) return; // No cambiar el sprite si está en modo inmortal
+
     frameIndex = (frameIndex + 1) % frames.length;
     player.image.src = frames[frameIndex];
 }
@@ -233,8 +235,8 @@ function spawnAliens(wave) {
         aliens.push({
             x: canvas.width / 3 + i * 300,
             y: -100,
-            width: 100,
-            height: 100,
+            width: 140,     //40
+            height: 192.5,    //55
             image: alienImage
         });
     }
@@ -345,8 +347,8 @@ function spawnBoostAlien() {
     const alien = {
         x: -50,
         y: Math.random() * (canvas.height - 50),
-        width: 150,
-        height: 150,
+        width: 189,     //54
+        height: 175,    //50
         image: alienImage,
         speed: 3,
         targetX: player.x,
@@ -436,8 +438,8 @@ function spawnSingleBoss(startX, y, speed) {
     const boss = {
         x: startX,
         y: y,
-        width: 120,
-        height: 120,
+        width: 210,     //70
+        height: 249,    //83
         speed: speed, // Velocidad inicial de entrada
         shooting: false, // No disparan al inicio
         shotsFired: 0, // Contador de disparos
@@ -553,36 +555,78 @@ function moveBossToPlayer(boss) {
 
         // Si no quedan bosses, iniciar nueva oleada
         if (bosses.length === 0) {
-            setTimeout(winGame, 2000); // Llamar a winGame después de 2s
+            setTimeout(gameWin, 2000); // Llamar a winGame después de 2s
         }
     }, 50);
 }
-function winGame() {
-    console.log("¡Has ganado la partida!");
-    
-    gameStarted = false; // Evitar que el juego siga corriendo
 
-    // Limpiar el canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Fondo negro
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+let godModeSequence = ""; // Guardará las letras ingresadas
 
-    // Mostrar mensaje de victoria
-    ctx.fillStyle = "white";
-    ctx.font = "50px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("¡Felicidades, has ganado!", canvas.width / 2, canvas.height / 2 - 50);
-    ctx.font = "30px Arial";
-    ctx.fillText("Presiona 'R' para reiniciar", canvas.width / 2, canvas.height / 2 + 20);
+document.addEventListener("keydown", (event) => {
+    let key = event.key.toLowerCase();
+
+    // Verificar si la secuencia es correcta
+    if (key === "e") {
+        godModeSequence = "e";
+    } else if (godModeSequence === "e" && key === "l") {
+        godModeSequence = "el";
+    } else if (godModeSequence === "el" && key === "t") {
+        godModeSequence = "elt";
+    } else if (godModeSequence === "elt" && key === "o") {
+        godModeSequence = "elto";
+    } else if (godModeSequence === "elto" && key === "n") {
+        godModeSequence = ""; // Reiniciar secuencia después de activarla
+
+        // Activar modo inmortal
+        player.isImmortal = true;
+        player.isGodMode = true;
+        player.image.src = "assets/rocketman_god.png";
+
+        // Aumentar tamaño del jugador inmortal
+        player.width = 170;
+        player.height = 286;
+
+        takeDamage = function () {
+            console.log("Eres inmortal. No recibes daño.");
+        };
+
+        console.log("¡Modo inmortal activado!");
+    } else {
+        godModeSequence = ""; // Reiniciar si se presiona una tecla incorrecta
+    }
+});
+
+
+
+
+
+
+// function winGame() {
+//     console.log("¡Has ganado la partida!");
     
-    document.addEventListener("keydown", (event) => {
-        if (event.key.toLowerCase() === "r") {
-            location.reload(); // Reiniciar el juego
-        }
-    });
-}
+//     gameStarted = false; // Evitar que el juego siga corriendo
+
+//     // Limpiar el canvas
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+//     // Fondo negro
+//     ctx.fillStyle = "black";
+//     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//     // Mostrar mensaje de victoria
+//     ctx.fillStyle = "white";
+//     ctx.font = "50px Arial";
+//     ctx.textAlign = "center";
+//     ctx.fillText("¡Felicidades, has ganado!", canvas.width / 2, canvas.height / 2 - 50);
+//     ctx.font = "30px Arial";
+//     ctx.fillText("Presiona 'R' para reiniciar", canvas.width / 2, canvas.height / 2 + 20);
+    
+//     document.addEventListener("keydown", (event) => {
+//         if (event.key.toLowerCase() === "r") {
+//             location.reload(); // Reiniciar el juego
+//         }
+//     });
+// }
 
 
 // Función para habilitar los clics en los bosses
@@ -788,13 +832,13 @@ function takeDamage() {
         if (player.lives % 2 === 0) {
             frames.length = 0;
             frames.push(...damagedFrames);
-            player.width = 250;  // Tamaño normal
-            player.height = 250;
+            player.width = 185;     // 37
+            player.height = 130;    //26
         } else {
             frames.length = 0;
             frames.push(...normalFrames);
-            player.width = 100;  // Tamaño reducido para "rocketman"
-            player.height = 100;
+            player.width = 68;      // 34
+            player.height = 112;    //56
         }
 
         frameIndex = 0; // Reiniciar la animación con la nueva secuencia
@@ -817,3 +861,4 @@ function takeDamage() {
 
 
 // Código para los asteroides
+

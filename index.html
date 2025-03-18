@@ -44,7 +44,7 @@
     <!-- HEADER -->
     <header class="d-flex align-items-center justify-content-center p-3 bg-primary">
         <img src="assets/asteroid.png" alt="Asteroide" class="me-3" style="height: 50px;">
-        <h1 class="mb-0 text-white">Batalla Cósmica</h1>
+        <h1 class="mb-0 text-white">Superviviente espacial</h1>
     </header>
 
 
@@ -70,39 +70,38 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content bg-dark text-light">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="guideModalLabel">Guía de Enemigos</h5>
+                            <h5 class="modal-title w-100 text-center" id="guideModalLabel">Guía de Enemigos</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                        <div class="modal-body text-center" style="max-height: 400px; overflow-y: auto;">
                             <!-- Enemigo 1: Asteroide -->
                             <div class="mb-4">
-                                <img src="assets/asteroide1.png" alt="Asteroide" class="img-fluid mb-2">
+                                <img src="assets/asteroide1.png" alt="Asteroide" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Asteroide</h5>
                                 <p>Destrúyelo para ganar puntos.</p>
                             </div>
-
+            
                             <!-- Enemigo 2: Disparador -->
                             <div class="mb-4">
-                                <img src="assets/alien_shooter.png" alt="Enemigo Disparador" class="img-fluid mb-2">
+                                <img src="assets/alien_shooter.png" alt="Enemigo Disparador" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Disparador</h5>
                                 <p>Esquiva sus disparos, no puedes dañarlo.</p>
                             </div>
-
+            
                             <!-- Enemigo 3: Embestidor -->
                             <div class="mb-4">
-                                <img src="assets/alien_boost1.png" alt="Enemigo Embestidor" class="img-fluid mb-2">
+                                <img src="assets/alien_boost1.png" alt="Enemigo Embestidor" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Embestidor</h5>
                                 <p>Te perseguirá hasta estrellarse contra ti. Destrúyelo antes de que impacte.</p>
                             </div>
-
+            
                             <!-- Enemigo 4: Jefe -->
                             <div class="mb-4">
-                                <img src="assets/alien_boss.png" alt="Jefe Final" class="img-fluid mb-2">
+                                <img src="assets/alien_boss.png" alt="Jefe Final" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Jefe</h5>
                                 <p>Son tres aliens que primero disparan y luego te persiguen. Mientras disparan, son invulnerables.  
                                 Espera a que te persigan para poder dañarlos.</p>
                             </div>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -110,6 +109,7 @@
                     </div>
                 </div>
             </div>
+            
 
         </div>
     </div>
@@ -118,20 +118,19 @@
     <!-- MAIN (JUEGO) -->
     <main id="gameScreen" class="flex-grow-1 d-flex justify-content-center align-items-center position-relative d-none">
         <canvas id="gameCanvas"></canvas>
-
-        <!-- Caja de instrucciones -->
-        <div id="instructionsBox" class="instructions open">
-            <button id="toggleInstructions" class="btn btn-outline-light">☰</button>
-            <div class="instructions-content">
-                <h3>Instrucciones</h3>
-                <p>- Muévete con las teclas W, A, S, D.</p>
-                <p>- Dispara haciendo clic sobre los enemigos.</p>
-                <p>- Destruye asteroides para ganar puntos.</p>
-                <p>- Evita los ataques enemigos; si te golpean, tu nave sufrirá daño.</p>
-                <p>- Sobrevive y logra regresar a la Tierra.</p>
-            </div>
-        </div>
     </main>
+    <!-- Caja de instrucciones -->
+    <div id="instructionsBox" class="instructions open">
+        <button id="toggleInstructions" class="btn btn-outline-light">☰</button>
+        <div class="instructions-content">
+            <h3>Instrucciones</h3>
+            <p>- Muévete con las teclas W, A, S, D.</p>
+            <p>- Dispara haciendo clic sobre los enemigos.</p>
+            <p>- Destruye asteroides para ganar puntos.</p>
+            <p>- Evita los ataques enemigos; si te golpean, tu nave sufrirá daño.</p>
+            <p>- Sobrevive y logra regresar a la Tierra.</p>
+        </div>
+    </div>
 
     
 
@@ -141,6 +140,7 @@
     </footer>
 
     <!-- Scripts -->
+    
     <script src="js/menu.js"></script>
     <script src="js/main.js"></script>
     <script src="js/instructions.js"></script>
