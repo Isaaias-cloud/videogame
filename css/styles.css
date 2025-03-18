@@ -1,85 +1,124 @@
-/* Ajuste para que el main (gameScreen) tenga el mismo tamaño y posición que el menú */
-#gameScreen {
-    position: relative;
-    background: url('assets/background.png') center/cover no-repeat;
+/* 
+   Ajuste para que el contenedor principal del juego (gameScreen) 
+   tenga el mismo tamaño y posición que el menú, asegurando consistencia visual.
+*/
+#menuScreen {
     max-width: 1300px;
     max-height: 700px;
     width: min(100%, 1300px);
     height: min(100%, 700px);
     margin: auto;
-    overflow: hidden;
 }
 
-/* Asegurar que el canvas cubra todo el área del juego */
+#gameScreen {
+    position: relative; /* Permite posicionar elementos hijos de manera absoluta */
+    max-width: 1300px; /* Ancho máximo del contenedor */
+    max-height: 700px; /* Altura máxima del contenedor */
+    width: min(100%, 1300px); /* Ajusta el ancho a un máximo de 1300px sin exceder el 100% del viewport */
+    height: min(100%, 700px); /* Ajusta la altura a un máximo de 700px sin exceder el 100% del viewport */
+    margin: auto; /* Centra horizontalmente */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+    background-color: black; /* Fondo negro en lugar de imagen */
+}
+
+/* 
+   Configuración del canvas para que cubra completamente el área de juego.
+   Se posiciona de forma absoluta dentro de gameScreen.
+*/
 #gameCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute; /* Se posiciona respecto a gameScreen */
+    top: 0; /* Alineado al borde superior */
+    left: 0; /* Alineado al borde izquierdo */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    height: 100%; /* Ocupa toda la altura disponible */
 }
 
-/* General */
+/* 
+   Configuración general del documento.
+   Se define una fuente estándar y se ajusta el tamaño del texto 
+   para mejorar la compatibilidad entre navegadores.
+*/
 body {
-    font-family: Arial, sans-serif;
-    text-size-adjust: 100%; /* Para compatibilidad con navegadores modernos */
+    font-family: Arial, sans-serif; /* Fuente predeterminada */
+    text-size-adjust: 100%; /* Previene el ajuste automático del tamaño del texto en móviles */
 }
+
 
 /* Caja de instrucciones */
-/* Ajuste en la caja de instrucciones */
+/* 
+   Estilos para la caja de instrucciones.
+   Se posiciona en la parte derecha de la pantalla y centrada verticalmente.
+   Tiene un fondo semitransparente y un diseño flexible para organizar su contenido.
+*/
 .instructions {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: absolute; /* Se posiciona de manera absoluta en la pantalla */
+    right: 20px; /* Separación del borde derecho */
+    top: 50%; /* Se coloca en el centro vertical */
+    transform: translateY(-50%); /* Ajusta el centro de la caja */
+    width: 50px; /* Ancho inicial en estado colapsado */
+    background: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    border-radius: 10px; /* Bordes redondeados */
+    text-align: center; /* Centra el contenido */
+    display: flex; /* Usa flexbox para organizar elementos internos */
+    flex-direction: column; /* Acomoda los elementos en columna */
+    align-items: center; /* Centra los elementos horizontalmente */
+    justify-content: center; /* Centra los elementos verticalmente */
 }
 
-/* Ajuste en la caja expandida */
+/* 
+   Cuando la caja de instrucciones se expande, 
+   aumenta su tamaño y agrega un relleno interno para el contenido.
+*/
 .instructions.open {
-    width: 200px;
-    height: auto;
-    padding: 10px;
+    width: 200px; /* Ancho expandido */
+    height: auto; /* Altura ajustable al contenido */
+    padding: 10px; /* Espaciado interno */
 }
 
-
-
-
+/* 
+   Estilos para los botones dentro de la caja de instrucciones.
+   Se ajustan al 100% del ancho disponible y tienen un tamaño de fuente grande.
+*/
 .instructions button {
-    width: 100%;
-    height: 50px;
-    font-size: 1.5rem;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    height: 50px; /* Altura fija */
+    font-size: 1.5rem; /* Tamaño de fuente grande */
 }
 
-/* Ajuste en el contenido */
+/* 
+   Contenido de las instrucciones (oculto por defecto).
+   Se mostrará cuando la caja esté expandida.
+*/
 .instructions-content {
-    display: none;
-    text-align: left;
-    color: white;
-    width: 100%;
-    padding-top: 10px;
+    display: none; /* Oculto por defecto */
+    text-align: left; /* Alineado del texto a la izquierda */
+    color: white; /* Color del texto */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding-top: 10px; /* Espaciado superior */
 }
 
-/* Mostrar el contenido cuando la caja está abierta */
+/* 
+   Cuando la caja de instrucciones está expandida,
+   el contenido se hace visible.
+*/
 .instructions.open .instructions-content {
-    display: block; 
+    display: block; /* Se muestra el contenido */
 }
 
+/* 
+   Efecto de desvanecimiento para transiciones suaves.
+   Se usa para animaciones donde un elemento desaparece gradualmente.
+*/
 .fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    opacity: 0; /* Hace el elemento completamente transparente */
+    transition: opacity 0.5s ease-in-out; /* Transición de 0.5 segundos */
 }
 
-
-/* Ocultar el juego hasta que se inicie */
+/* 
+   Clase para ocultar completamente un elemento.
+   Se usa para elementos que deben desaparecer hasta ser activados.
+*/
 .d-none {
-    display: none !important;
+    display: none !important; /* Se oculta completamente con prioridad */
 }
 

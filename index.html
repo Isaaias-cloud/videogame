@@ -48,80 +48,95 @@
     </header>
 
 
-    <!-- MENÚ INICIAL -->
-    <div id="menuScreen" class="menu-screen d-flex flex-column justify-content-center align-items-center vh-100 w-100"
-        style="background: url('assets/background.png') center/cover no-repeat; 
-            max-width: 1300px; 
-            max-height: 700px; 
-            width: min(100%, 1300px); 
-            height: min(100%, 700px); 
-            margin: auto;">
-            
+    <!-- 🏠 MENÚ INICIAL -->
+    <div id="menuScreen" class="menu-screen d-flex flex-column justify-content-center align-items-center vh-100 w-100">
+
+
+        <!-- 🎮 Título del juego -->
         <h1 class="mb-4 text-center">Superviviente Espacial</h1>
+
+        <!-- 📌 Contenedor de botones del menú -->
         <div class="d-grid gap-3 w-75">
+            <!-- 🟢 Botón para iniciar el juego -->
             <button id="startGame" class="btn btn-success btn-lg btn-block">Iniciar</button>
+
+            <!-- ⚙️ Botón para abrir los ajustes -->
             <button id="settings" class="btn btn-warning btn-lg btn-block" data-bs-toggle="modal" data-bs-target="#settingsModal">
                 Ajustes
-            </button><!-- Botón de Guía -->
-            <button id="guide" class="btn btn-info btn-lg btn-block" data-bs-toggle="modal" data-bs-target="#guideModal">Guía</button>
+            </button>
 
-            <!-- Modal de Guía -->
+            <!-- 📖 Botón para abrir la guía de enemigos -->
+            <button id="guide" class="btn btn-info btn-lg btn-block" data-bs-toggle="modal" data-bs-target="#guideModal">
+                Guía
+            </button>
+
+            <!-- 📜 Modal con información sobre los enemigos del juego -->
             <div class="modal fade" id="guideModal" tabindex="-1" aria-labelledby="guideModalLabel">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content bg-dark text-light">
+                        <!-- 🎭 Encabezado del modal -->
                         <div class="modal-header">
                             <h5 class="modal-title w-100 text-center" id="guideModalLabel">Guía de Enemigos</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+
+                        <!-- 📌 Cuerpo del modal con la descripción de los enemigos -->
                         <div class="modal-body text-center" style="max-height: 400px; overflow-y: auto;">
-                            <!-- Enemigo 1: Asteroide -->
+
+                            <!-- 🪨 Enemigo 1: Asteroide -->
                             <div class="mb-4">
                                 <img src="assets/asteroide1.png" alt="Asteroide" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Asteroide</h5>
                                 <p>Destrúyelo para ganar puntos.</p>
                             </div>
-            
-                            <!-- Enemigo 2: Disparador -->
+
+                            <!-- 🔫 Enemigo 2: Disparador -->
                             <div class="mb-4">
                                 <img src="assets/alien_shooter.png" alt="Enemigo Disparador" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Disparador</h5>
                                 <p>Esquiva sus disparos, no puedes dañarlo.</p>
                             </div>
-            
-                            <!-- Enemigo 3: Embestidor -->
+
+                            <!-- 🚀 Enemigo 3: Embestidor -->
                             <div class="mb-4">
                                 <img src="assets/alien_boost1.png" alt="Enemigo Embestidor" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Embestidor</h5>
                                 <p>Te perseguirá hasta estrellarse contra ti. Destrúyelo antes de que impacte.</p>
                             </div>
-            
-                            <!-- Enemigo 4: Jefe -->
+
+                            <!-- 👾 Enemigo 4: Jefe Final -->
                             <div class="mb-4">
                                 <img src="assets/alien_boss.png" alt="Jefe Final" class="img-fluid d-block mx-auto mb-2">
                                 <h5>Jefe</h5>
                                 <p>Son tres aliens que primero disparan y luego te persiguen. Mientras disparan, son invulnerables.  
-                                Espera a que te persigan para poder dañarlos.</p>
+                                    Espera a que te persigan para poder dañarlos.</p>
                             </div>
                         </div>
+
+                        <!-- 🔘 Botón para cerrar el modal -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
             </div>
-            
 
         </div>
     </div>
 
 
-    <!-- MAIN (JUEGO) -->
+
+    <!-- 🎮 MAIN (JUEGO) -->
     <main id="gameScreen" class="flex-grow-1 d-flex justify-content-center align-items-center position-relative d-none">
         <canvas id="gameCanvas"></canvas>
     </main>
-    <!-- Caja de instrucciones -->
+
+    <!-- 📖 Caja de instrucciones -->
     <div id="instructionsBox" class="instructions open">
+        <!-- 📌 Botón para mostrar/ocultar instrucciones -->
         <button id="toggleInstructions" class="btn btn-outline-light">☰</button>
+
+        <!-- 📜 Contenido de las instrucciones -->
         <div class="instructions-content">
             <h3>Instrucciones</h3>
             <p>- Muévete con las teclas W, A, S, D.</p>
@@ -132,21 +147,17 @@
         </div>
     </div>
 
-    
-
-    <!-- FOOTER -->
+    <!-- 📌 FOOTER -->
     <footer class="text-center p-3 bg-secondary">
         <p class="mb-0">© 2025 Creado por Isaaias Arrieta</p>
     </footer>
 
-    <!-- Scripts -->
-    
+    <!-- 📜 Scripts -->
     <script src="js/menu.js"></script>
     <script src="js/main.js"></script>
     <script src="js/instructions.js"></script>
     <script src="js/endgame.js"></script>
     <script src="js/settings.js"></script>
-
 
 
 </body>

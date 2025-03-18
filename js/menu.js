@@ -1,73 +1,84 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const menuScreen = document.getElementById("menuScreen");
-const gameScreen = document.getElementById("gameScreen");
-const startButton = document.getElementById("startGame");
+// 🎮 Selección de elementos del DOM
+const canvas = document.getElementById("gameCanvas"); // Lienzo donde se dibuja el juego
+const ctx = canvas.getContext("2d"); // Contexto 2D para renderizar gráficos
+const menuScreen = document.getElementById("menuScreen"); // Pantalla del menú principal
+const gameScreen = document.getElementById("gameScreen"); // Pantalla donde se ejecuta el juego
+const startButton = document.getElementById("startGame"); // Botón para iniciar el juego
 
-canvas.width = 1300;
-canvas.height = 700;
+// 📏 Configuración del tamaño del canvas
+canvas.width = 1300; // Ancho del lienzo del juego
+canvas.height = 700; // Alto del lienzo del juego
 
-let gameStarted = false;
 
-const menuSound = new Audio("assets/menu_sound.mp3");
-const gameMusic = new Audio("assets/music.mp3");
-gameMusic.loop = true;
+// 🔄 Estado del juego
+let gameStarted = false; // Variable que indica si el juego ha comenzado
 
-// Reproducir sonido del menú solo si está pausado
+// 🎵 Sonidos y música
+const menuSound = new Audio("assets/menu_sound.mp3"); // Sonido del menú
+const gameMusic = new Audio("assets/music.mp3"); // Música de fondo del juego
+gameMusic.loop = true; // Habilitar la reproducción en bucle de la música del juego
+
+// 🔊 Reproducir sonido del menú al hacer clic en cualquier botón
 document.querySelectorAll("button").forEach(button => {
     button.addEventListener("click", () => {
+        // Si el sonido del menú está pausado, se reproduce
         if (menuSound.paused) {
             menuSound.play().catch(error => console.log("Error al reproducir sonido del menú:", error));
         }
     });
 });
 
-// FUNCIÓN QUE INICIA EL JUEGO
+// 🎮 FUNCIÓN QUE INICIA EL JUEGO
 function startGame() {
+    // 🛑 Evita que el juego se inicie más de una vez
     if (gameStarted) return;
-    
-    console.log("Juego iniciado!");
-    gameStarted = true;
 
-    // Ocultar menú con animación
+    console.log("Juego iniciado!");
+    gameStarted = true; // Marca el estado del juego como iniciado
+
+    // 🔥 Ocultar el menú con una animación de desvanecimiento
     menuScreen.classList.add("fade-out");
 
     setTimeout(() => {
-        menuScreen.style.display = "none"; // Ocultar menú
-        gameScreen.classList.remove("d-none"); // Mostrar el juego
+        menuScreen.style.display = "none"; // Oculta el menú después de la animación
+        gameScreen.classList.remove("d-none"); // Muestra la pantalla del juego
 
-        // Reproducir música
+        // 🎵 Iniciar la música del juego
         gameMusic.play().catch(error => console.log("Error al reproducir música:", error));
 
-        // Iniciar el juego
+        // ⏳ Retraso breve antes de iniciar la lógica del juego
         setTimeout(() => {
-            gameLoop();
-            spawnAsteroidWave();
-            alienShoot();
+            gameLoop(); // Inicia el bucle principal del juego
+            spawnAsteroidWave(); // Genera la primera oleada de asteroides
+            alienShoot(); // Hace que los aliens comiencen a disparar
         }, 100);
-    }, 500);
+    }, 500); // Retraso para permitir la animación de salida del menú
 }
 
-// DETENER LA MÚSICA CUANDO EL JUGADOR MUERA
+// 🛑 FUNCIÓN QUE SE EJECUTA CUANDO EL JUGADOR MUERE
 function gameOver() {
     console.log("Juego terminado");
-    gameStarted = false;
+    gameStarted = false; // Marca el juego como terminado
+
+    // 🎵 Detener la música del juego y reiniciar el tiempo de reproducción
     gameMusic.pause();
     gameMusic.currentTime = 0;
 }
 
-// ASIGNAR EVENTO AL BOTÓN DE INICIO
+// 🎮 ASIGNAR EVENTO AL BOTÓN DE INICIO
 startButton.addEventListener("click", startGame);
 
-// Si la música termina, reiniciarla
+// 🔄 REINICIAR LA MÚSICA CUANDO TERMINE
 gameMusic.addEventListener("ended", () => {
     if (gameStarted) {
         gameMusic.play().catch(error => console.log("Error al reiniciar música:", error));
     }
 });
+
+// 📌 EVENTO PARA OCULTAR EL MENÚ Y MOSTRAR EL JUEGO CUANDO SE PRESIONA "INICIAR"
 document.getElementById("startGame").addEventListener("click", function () {
     document.getElementById("menuScreen").classList.add("d-none"); // Oculta el menú
     document.getElementById("gameScreen").classList.remove("d-none"); // Muestra el juego
 
-    startGame(); // Llama a la función que inicia el juego
+    startGame(); // Inicia el juego llamando a la función principal
 });
