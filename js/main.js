@@ -3,7 +3,8 @@
 ctx.imageSmoothingEnabled = false;
 
 canvas.style.cursor = "url('assets/mira.png') 16 16, auto";
-
+// Cargar el sonido
+const clickSound = new Audio("assets/sound.mp3");
 
 
 //canvas.width = 1300;
@@ -96,30 +97,36 @@ function updateAnimation() {
 }
 
 let lastTime = 0;
-function gameLoop(timestamp) {
-    if (!gameStarted) return; // Si el juego terminó, no dibujar más
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
+function updateGame() {
     updateAsteroids();
-    updateExplosions();
-    drawExplosions();
-
-    drawAsteroids();
-    drawAliens(); // Dibujar aliens
-    drawBoostAliens(ctx); // Dibujar aliens boost
-    drawAlienBosses();
-
     updateBoostAliens();
     updateAlienProjectiles();
-    drawAlienProjectiles();
+    updateExplosions();
+    updatePlayer();
+}
 
+function renderGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    
+    drawAsteroids();
+    drawAliens();
+    drawBoostAliens(ctx);
+    drawAlienBosses();
+    drawAlienProjectiles();
+    drawExplosions();
+    
     drawScore();
     drawFloatingTexts();
-
-    updatePlayer();
     drawPlayer();
+}
 
+function gameLoop(timestamp) {
+    if (!gameStarted) return; // Detiene el juego si terminó
+    
+    updateGame();
+    renderGame();
+    
     if (timestamp - lastTime > 100) {
         updateAnimation();
         lastTime = timestamp;
@@ -149,7 +156,7 @@ function getRandomAsteroid() {
 }
 
 
-const asteroids = []; // Almacena los asteroides
+let asteroids = []; // Almacena los asteroides
 const explosions = []; // Almacena explosiones activas
 const explosionFrames = [
     "assets/explosion1.png",
@@ -363,10 +370,9 @@ function spawnBoostAlien() {
 
 
 // 🔥 Movimiento de aliens boost
+// 🔥 Movimiento de aliens boost
 function updateBoostAliens() {
-    for (let i = alienBoosts.length - 1; i >= 0; i--) {
-        const alien = alienBoosts[i];
-
+    alienBoosts = alienBoosts.filter((alien) => {
         // Movimiento hacia el jugador
         let dx = player.x - alien.x;
         let dy = player.y - alien.y;
@@ -380,24 +386,26 @@ function updateBoostAliens() {
         }
 
         // 🚨 DETECTAR COLISIÓN CON EL JUGADOR 🚨
-        if (
-            alien.x < player.x + player.width &&
-            alien.x + alien.width > player.x &&
-            alien.y < player.y + player.height &&
-            alien.y + alien.height > player.y
-        ) {
-            takeDamage();  // Llama a la función de daño del jugador
-            startExplosion(alien.x, alien.y, alien.width, alien.height); // Explosión del alien
-            alienBoosts.splice(i, 1); // Eliminar alien de la lista
-            continue; // Saltar el resto del código para este alien
+        if (isColliding(alien, player)) {
+            if (player.isImmortal) {
+                score += 500; // Gana puntos en vez de recibir daño
+                addFloatingText("+500", alien.x, alien.y);
+
+                // 🔊 Reproducir sound.mp3 sin solapamiento
+                clickSound.currentTime = 0; 
+                clickSound.play();
+            } else {
+                takeDamage();
+            }
+            startExplosion(alien.x, alien.y, alien.width, alien.height);
+            return false; // Eliminar el alien
         }
 
         // Eliminar si sale de la pantalla
-        if (alien.y > canvas.height) {
-            alienBoosts.splice(i, 1);
-        }
-    }
+        return alien.y <= canvas.height;
+    });
 }
+
 // Dibujar los aliens boost
 function drawBoostAliens(ctx) {
     for (const alien of alienBoosts) {
@@ -514,7 +522,7 @@ function bossShoot(boss) {
     }
 }
 
-// Función para mover el boss hacia el jugador
+// 🚀 Movimiento del Boss hacia el jugador
 function moveBossToPlayer(boss) {
     let speedIncrease = 0.5; // Aceleración gradual
 
@@ -527,22 +535,27 @@ function moveBossToPlayer(boss) {
         let dx = player.x - boss.x;
         let dy = player.y - boss.y;
         let length = Math.sqrt(dx * dx + dy * dy);
-        dx /= length;
-        dy /= length;
 
-        boss.x += dx * (2 + speedIncrease);
-        boss.y += dy * (2 + speedIncrease);
-        speedIncrease += 0.2; // Aumenta la velocidad progresivamente
+        if (length !== 0) {
+            dx /= length;
+            dy /= length;
+            boss.x += dx * (2 + speedIncrease);
+            boss.y += dy * (2 + speedIncrease);
+            speedIncrease += 0.2;
+        }
 
-        // **Si el boss alcanza al jugador, explota y causa daño**
-        if (
-            boss.x < player.x + player.width &&
-            boss.x + boss.width > player.x &&
-            boss.y < player.y + player.height &&
-            boss.y + boss.height > player.y
-        ) {
-            startExplosion(boss.x, boss.y, boss.width, boss.height); // Explosión en el boss
-            takeDamage(); // Daña al jugador
+        // 🚨 DETECTAR COLISIÓN CON EL JUGADOR 🚨
+        if (isColliding(boss, player)) {
+            startExplosion(boss.x, boss.y, boss.width, boss.height);
+            if (player.isImmortal) {
+                score += 1000; // Puntos extra en modo inmortal
+                addFloatingText("+1000", boss.x, boss.y);
+                // 🔊 Reproducir sound.mp3 sin solapamiento
+                clickSound.currentTime = 0; 
+                clickSound.play();
+            } else {
+                takeDamage();
+            }
             bosses.splice(bosses.indexOf(boss), 1);
             clearInterval(chaseInterval);
         }
@@ -555,7 +568,7 @@ function moveBossToPlayer(boss) {
 
         // Si no quedan bosses, iniciar nueva oleada
         if (bosses.length === 0) {
-            setTimeout(gameWin, 2000); // Llamar a winGame después de 2s
+            setTimeout(gameWin, 2000);
         }
     }, 50);
 }
@@ -591,10 +604,25 @@ document.addEventListener("keydown", (event) => {
         };
 
         console.log("¡Modo inmortal activado!");
+
+        // DETENER LA MÚSICA ACTUAL
+        if (gameMusic) {
+            gameMusic.pause();
+            gameMusic.currentTime = 0;
+        }
+
+        // ESPERAR 3 SEGUNDOS Y REPRODUCIR musicgod.mp3 EN BUCLE
+        setTimeout(() => {
+            let godModeMusic = new Audio("assets/musicgod.mp3");
+            godModeMusic.loop = true;
+            godModeMusic.play();
+        }, 3000);
     } else {
         godModeSequence = ""; // Reiniciar si se presiona una tecla incorrecta
     }
 });
+
+
 
 
 
@@ -669,22 +697,29 @@ function drawAlienBosses() {
 
 canvas.addEventListener("click", handleClick);
 
+// 🌑 Movimiento de asteroides
 function updateAsteroids() {
     for (let i = asteroids.length - 1; i >= 0; i--) {
         asteroids[i].x += asteroidSpeed;
 
-        // Colisión con la nave
-        if (
-            asteroids[i].x < player.x + player.width &&
-            asteroids[i].x + asteroids[i].width > player.x &&
-            asteroids[i].y < player.y + player.height &&
-            asteroids[i].y + asteroids[i].height > player.y
-        ) {
-            takeDamage(); // Aplicar daño a la nave
-            asteroids.splice(i, 1); // Eliminar el asteroide tras el impacto
+        // 🚨 DETECTAR COLISIÓN CON EL JUGADOR 🚨
+        if (isColliding(asteroids[i], player)) {
+            if (player.isImmortal) {
+                score += 200; // Gana puntos en lugar de recibir daño
+                addFloatingText("+200", asteroids[i].x, asteroids[i].y);
+
+                // 🔊 Reproducir sound.mp3 sin solapamiento
+                clickSound.currentTime = 0; 
+                clickSound.play();
+            } else {
+                takeDamage();
+            }
+            startExplosion(asteroids[i].x, asteroids[i].y, asteroids[i].width, asteroids[i].height);
+            asteroids.splice(i, 1); // Eliminar asteroide
+            continue;
         }
 
-        // Eliminar asteroides que salgan de la pantalla
+        // Eliminar asteroides que salen de la pantalla
         if (asteroids[i] && asteroids[i].x > canvas.width) {
             asteroids.splice(i, 1);
         }
@@ -692,13 +727,13 @@ function updateAsteroids() {
 }
 
 
+
 function drawAsteroids() {
     for (let asteroid of asteroids) {
         ctx.drawImage(asteroid.image, asteroid.x, asteroid.y, asteroid.width, asteroid.height);
     }
 }
-// Cargar el sonido
-const clickSound = new Audio("assets/sound.mp3");
+
 
 let score = 0; // Puntuación
 let floatingTexts = []; // Lista de números flotantes
@@ -725,7 +760,9 @@ function handleClick(event) {
             startExplosion(asteroid.x, asteroid.y, asteroid.width, asteroid.height);
             asteroids.splice(i, 1);
             
-            score += 100; // Sumar puntos
+            let points = 100;
+            if (player.isGodMode) points *= 100; // Multiplicar por 100 en modo inmortal
+            score += points; 
             addFloatingText("+100", asteroid.x + asteroid.width / 2, asteroid.y);
             
             return; 
@@ -746,7 +783,9 @@ function handleClick(event) {
                 startExplosion(alien.x, alien.y, alien.width, alien.height);
                 alienBoosts.splice(i, 1);
 
-                score += 50; // Sumar puntos
+                let points = 50;
+                if (player.isGodMode) points *= 100; // Multiplicar por 100 en modo inmortal
+                score += points;
                 addFloatingText("+50", alien.x + alien.width / 2, alien.y);
             }
             return; 
@@ -852,7 +891,15 @@ function takeDamage() {
 }
 
 
-
+// 📏 Función genérica para detectar colisiones
+function isColliding(obj1, obj2) {
+    return (
+        obj1.x < obj2.x + obj2.width &&
+        obj1.x + obj1.width > obj2.x &&
+        obj1.y < obj2.y + obj2.height &&
+        obj1.y + obj1.height > obj2.y
+    );
+}
 
 //gameLoop();
 //spawnAsteroidWave();

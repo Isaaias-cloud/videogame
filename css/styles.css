@@ -22,6 +22,7 @@
 /* General */
 body {
     font-family: Arial, sans-serif;
+    text-size-adjust: 100%; /* Para compatibilidad con navegadores modernos */
 }
 
 /* Caja de instrucciones */
@@ -68,7 +69,7 @@ body {
 
 /* Mostrar el contenido cuando la caja está abierta */
 .instructions.open .instructions-content {
-    display: block;
+    display: block; 
 }
 
 .fade-out {
